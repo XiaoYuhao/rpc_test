@@ -23,9 +23,9 @@
 #include "procedure.h"
 using namespace std;
 
-Call_Table* Call_Table::_instance = NULL;
+Call_Table* Call_Table::_instance = NULL;       //远程调用函数表，单例模式
 Call_Table* call_table = Call_Table::create();
-ThreadPool* ThreadPool::_instance = NULL;
+ThreadPool* ThreadPool::_instance = NULL;       //线程池，用于处理单个远程调用，单例模式
 ThreadPool* threadpool = ThreadPool::create();
 
 int add(int a, int b){
@@ -61,7 +61,7 @@ void remote_call(int epfd, int fd, int id, int para1, int para2){
         prp.setdata(PROCEDURE_SUCCESS, ret);
     }
     ret = send(fd, (void*)&prp, sizeof(prp), MSG_DONTWAIT);
-    removefd(epfd, fd);
+    removefd(epfd, fd);                                             //采用短连接的方式，调用结束后即断开连接
     close(fd);
 }
 
